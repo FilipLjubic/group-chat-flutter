@@ -15,12 +15,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
+          children: [
             Row(
-              children: <Widget>[
-                Container(
-                  child: Image.asset('images/flame-808.png'),
-                  height: 60.0,
+              children: [
+                Hero(
+                  tag: 'logo',
+                  child: Container(
+                    child: Image.asset('images/flame-808.png'),
+                    height: 60.0,
+                  ),
                 ),
                 SizedBox(
                   width: 10.0,
@@ -46,6 +49,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 child: MaterialButton(
                   onPressed: () {
                     //Go to login screen.
+                    Navigator.pushNamed(context, '/login');
                   },
                   minWidth: 200.0,
                   height: 42.0,
@@ -64,6 +68,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 child: MaterialButton(
                   onPressed: () {
                     //Go to registration screen.
+                    Navigator.pushNamed(context, '/register');
                   },
                   minWidth: 200.0,
                   height: 42.0,
