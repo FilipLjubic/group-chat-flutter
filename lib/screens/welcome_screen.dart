@@ -1,11 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:group_chat_app/components/authorize_button.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class WelcomeScreen extends StatefulWidget {
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
+class _WelcomeScreenState extends State<WelcomeScreen>
+    with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+  Animation _animation;
+
+  @override
+  void initState() {
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 1),
+    );
+
+    _animation =
+        CurvedAnimation(parent: _controller, curve: Curves.easeInOutCubic);
+
+    _controller.forward();
+    _controller.addListener(() {
+      setState(() {});
+      print(_animation.value);
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,61 +46,44 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   tag: 'logo',
                   child: Container(
                     child: Image.asset('images/flame-808.png'),
-                    height: 60.0,
+                    height: _animation.value * 60.0,
                   ),
                 ),
                 SizedBox(
                   width: 10.0,
                 ),
-                Text(
-                  'Flash Chat',
-                  style: TextStyle(
+                ColorizeAnimatedTextKit(
+                  // speed: Duration(seconds: 1.0),
+                  text: ['INSIDERS'],
+                  textStyle: TextStyle(
                     fontSize: 45.0,
                     fontWeight: FontWeight.w900,
+                    color: Colors.blue[900],
+                    fontFamily: "Russo",
+                    letterSpacing: 2.0,
                   ),
+                  colors: [
+                    Colors.blue[900],
+                    Colors.lightBlue,
+                    Colors.lightBlueAccent,
+                    Colors.blue,
+                  ],
+                  isRepeatingAnimation: false,
                 ),
               ],
             ),
             SizedBox(
               height: 48.0,
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-              child: Material(
-                elevation: 5.0,
-                color: Colors.lightBlueAccent,
-                borderRadius: BorderRadius.circular(30.0),
-                child: MaterialButton(
-                  onPressed: () {
-                    //Go to login screen.
-                    Navigator.pushNamed(context, '/login');
-                  },
-                  minWidth: 200.0,
-                  height: 42.0,
-                  child: Text(
-                    'Log In',
-                  ),
-                ),
-              ),
+            AuthorizeButton(
+              onPressed: () => Navigator.pushNamed(context, '/login'),
+              color: Colors.lightBlueAccent,
+              text: 'Log In',
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-              child: Material(
-                color: Colors.blueAccent,
-                borderRadius: BorderRadius.circular(30.0),
-                elevation: 5.0,
-                child: MaterialButton(
-                  onPressed: () {
-                    //Go to registration screen.
-                    Navigator.pushNamed(context, '/register');
-                  },
-                  minWidth: 200.0,
-                  height: 42.0,
-                  child: Text(
-                    'Register',
-                  ),
-                ),
-              ),
+            AuthorizeButton(
+              onPressed: () => Navigator.pushNamed(context, '/register'),
+              color: Colors.blueAccent,
+              text: 'Register',
             ),
           ],
         ),
