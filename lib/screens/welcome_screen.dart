@@ -25,7 +25,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     _controller.forward();
     _controller.addListener(() {
       setState(() {});
-      print(_animation.value);
     });
     super.initState();
   }
@@ -63,10 +62,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     letterSpacing: 2.0,
                   ),
                   colors: [
-                    Colors.blue[900],
-                    Colors.lightBlue,
                     Colors.lightBlueAccent,
+                    Colors.lightBlue,
                     Colors.blue,
+                    Colors.blue[900],
                   ],
                   isRepeatingAnimation: false,
                 ),
