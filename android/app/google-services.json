@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "808999641039",
+    "firebase_url": "https://insiders-f363f.firebaseio.com",
+    "project_id": "insiders-f363f",
+    "storage_bucket": "insiders-f363f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:808999641039:android:ef6b9f094b02764db4fcba",
+        "android_client_info": {
+          "package_name": "com.filipljubic.insiders"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "808999641039-i5t5sci45o0vuhjlat338vl0s9vu0vr9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAGmDF5wv_dAnWDfcxoHFyR4SfJRtxkME"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "808999641039-i5t5sci45o0vuhjlat338vl0s9vu0vr9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

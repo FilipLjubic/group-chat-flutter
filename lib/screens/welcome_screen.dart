@@ -14,19 +14,14 @@ class _WelcomeScreenState extends State<WelcomeScreen>
 
   @override
   void initState() {
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 1),
-    );
-
-    _animation =
-        CurvedAnimation(parent: _controller, curve: Curves.easeInOutCubic);
-
-    _controller.forward();
-    _controller.addListener(() {
-      setState(() {});
-    });
+    initializeAnimation();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -45,7 +40,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   tag: 'logo',
                   child: Container(
                     child: Image.asset('images/flame-808.png'),
-                    height: _animation.value * 60.0,
+                    height: _animation.value * 56.0,
                   ),
                 ),
                 SizedBox(
@@ -57,15 +52,16 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   textStyle: TextStyle(
                     fontSize: 45.0,
                     fontWeight: FontWeight.w900,
-                    color: Colors.blue[900],
+                    color: Colors.grey[800],
                     fontFamily: "Russo",
-                    letterSpacing: 2.0,
+                    letterSpacing: 3.0,
                   ),
                   colors: [
-                    Colors.lightBlueAccent,
+                    Colors.grey[800],
                     Colors.lightBlue,
-                    Colors.blue,
+                    Colors.yellow,
                     Colors.blue[900],
+                    Colors.blue,
                   ],
                   isRepeatingAnimation: false,
                 ),
@@ -88,5 +84,20 @@ class _WelcomeScreenState extends State<WelcomeScreen>
         ),
       ),
     );
+  }
+
+  void initializeAnimation() {
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 1),
+    );
+
+    _animation =
+        CurvedAnimation(parent: _controller, curve: Curves.easeInOutCubic);
+
+    _controller.forward();
+    _controller.addListener(() {
+      setState(() {});
+    });
   }
 }
