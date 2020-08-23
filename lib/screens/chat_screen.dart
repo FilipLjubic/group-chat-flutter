@@ -17,7 +17,16 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     getCurrentUser();
+    messagesStream();
     super.initState();
+  }
+
+  void messagesStream() async {
+    await for (var snapshot in _store.collection('messages').snapshots()) {
+      for (var message in snapshot.docs) {
+        print(message.data());
+      }
+    }
   }
 
   @override
@@ -81,7 +90,6 @@ class _ChatScreenState extends State<ChatScreen> {
       final user = _auth.currentUser;
       if (user != null) {
         loggedInUser = user;
-        print(loggedInUser.email);
       }
     } catch (e) {
       print(e);
