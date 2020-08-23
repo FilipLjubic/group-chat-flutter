@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:group_chat_app/components/authorize_button.dart';
 import 'package:group_chat_app/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class RegistrationScreen extends StatefulWidget {
   @override
@@ -8,6 +9,10 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  final _auth = FirebaseAuth.instance;
+  String email;
+  String password;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,8 +34,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               height: 48.0,
             ),
             TextField(
+                keyboardType: TextInputType.emailAddress,
+                textAlign: TextAlign.center,
                 onChanged: (value) {
-                  //Do something with the user input.
+                  email = value;
                 },
                 decoration: kTextFieldDecoration.copyWith(
                     hintText: "Enter your email")),
@@ -38,8 +45,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               height: 8.0,
             ),
             TextField(
+              textAlign: TextAlign.center,
+              obscureText: true,
               onChanged: (value) {
-                //Do something with the user input.
+                password = value;
               },
               decoration: kTextFieldDecoration.copyWith(
                   hintText: "Enter your password"),
@@ -48,7 +57,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               height: 24.0,
             ),
             AuthorizeButton(
-              onPressed: null,
+              onPressed: () async {
+                try {
+                  final newUser = await _auth.createUserWithEmailAndPassword(
+                    email: email,
+                    password: password,
+                  );
+                  if (newUser != null) {
+                    Navigator.pushNamed(context, '/chat');
+                  }
+                } catch (e) {
+                  print(e);
+                }
+              },
               color: Colors.blueAccent,
               text: 'Register',
             ),
