@@ -88,8 +88,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
 
   void initializeAnimation() {
     _controller = AnimationController(
-      vsync: this,
       duration: Duration(seconds: 1),
+      vsync: this,
     );
 
     _animation =
