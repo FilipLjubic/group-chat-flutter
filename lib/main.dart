@@ -5,10 +5,12 @@ import 'package:group_chat_app/screens/screens.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(FlashChat());
+  runApp(
+    Insiders(),
+  );
 }
 
-class FlashChat extends StatelessWidget {
+class Insiders extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
