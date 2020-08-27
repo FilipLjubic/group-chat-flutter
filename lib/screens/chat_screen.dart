@@ -47,7 +47,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 Navigator.pop(context);
               }),
         ],
-        title: Text('💬 Group Chat'),
+        title: Text('💬 Insiders'),
         backgroundColor: Colors.lightBlueAccent,
       ),
       body: SafeArea(
