@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:group_chat_app/components/message_bubble.dart';
 import 'package:group_chat_app/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+final _store = FirebaseFirestore.instance;
 
 class ChatScreen extends StatefulWidget {
   @override
@@ -9,8 +12,8 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  final messageTextController = TextEditingController();
   final _auth = FirebaseAuth.instance;
-  final _store = FirebaseFirestore.instance;
   User loggedInUser;
   String messageText;
 
@@ -50,37 +53,15 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            StreamBuilder<QuerySnapshot>(
-              stream: _store.collection('messages').snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                        backgroundColor: Colors.lightBlueAccent),
-                  );
-                }
-                final messages = snapshot.data.docs;
-                List<Text> messageWidgets = [];
-                for (var message in messages) {
-                  final messageData = message.data();
-                  final messageText = messageData['text'];
-                  final messageSender = messageData['sender'];
-
-                  final messageWidget =
-                      Text("$messageText from $messageSender");
-                  messageWidgets.add(messageWidget);
-                }
-
-                return Column(children: messageWidgets);
-              },
-            ),
+            MessageStream(),
             Container(
               decoration: kMessageContainerDecoration,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
+                children: [
                   Expanded(
                     child: TextField(
+                      controller: messageTextController,
                       onChanged: (value) {
                         messageText = value;
                       },
@@ -94,6 +75,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         'text': messageText,
                         'sender': loggedInUser.email,
                       });
+                      messageTextController.clear();
                     },
                     child: Text(
                       'Send',
@@ -118,5 +100,46 @@ class _ChatScreenState extends State<ChatScreen> {
     } catch (e) {
       print(e);
     }
+  }
+}
+
+class MessageStream extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _store.collection('messages').snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(
+                backgroundColor: Colors.lightBlueAccent),
+          );
+        }
+        final messages = snapshot.data.docs;
+        List<MessageBubble> messageBubbles = [];
+        for (var message in messages) {
+          final messageData = message.data();
+          final messageText = messageData['text'];
+          final messageSender = messageData['sender'];
+
+          final messageBubble = MessageBubble(
+            text: messageText,
+            sender: messageSender,
+          );
+
+          messageBubbles.add(messageBubble);
+        }
+
+        return Expanded(
+          child: ListView(
+            padding: EdgeInsets.symmetric(
+              horizontal: 10.0,
+              vertical: 20.0,
+            ),
+            children: messageBubbles,
+          ),
+        );
+      },
+    );
   }
 }
