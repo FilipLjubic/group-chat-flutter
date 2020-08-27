@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 final _store = FirebaseFirestore.instance;
+User loggedInUser;
 
 class ChatScreen extends StatefulWidget {
   @override
@@ -14,21 +15,22 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final messageTextController = TextEditingController();
   final _auth = FirebaseAuth.instance;
-  User loggedInUser;
   String messageText;
 
   @override
   void initState() {
     getCurrentUser();
-    messagesStream();
     super.initState();
   }
 
-  void messagesStream() async {
-    await for (var snapshot in _store.collection('messages').snapshots()) {
-      for (var message in snapshot.docs) {
-        print(message.data());
+  void getCurrentUser() {
+    try {
+      final user = _auth.currentUser;
+      if (user != null) {
+        loggedInUser = user;
       }
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -90,17 +92,6 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
-
-  void getCurrentUser() {
-    try {
-      final user = _auth.currentUser;
-      if (user != null) {
-        loggedInUser = user;
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
 }
 
 class MessageStream extends StatelessWidget {
@@ -115,16 +106,19 @@ class MessageStream extends StatelessWidget {
                 backgroundColor: Colors.lightBlueAccent),
           );
         }
-        final messages = snapshot.data.docs;
+        final messages = snapshot.data.docs.reversed;
         List<MessageBubble> messageBubbles = [];
         for (var message in messages) {
           final messageData = message.data();
           final messageText = messageData['text'];
           final messageSender = messageData['sender'];
 
+          final currentUser = loggedInUser.email;
+
           final messageBubble = MessageBubble(
             text: messageText,
             sender: messageSender,
+            isMe: currentUser == messageSender,
           );
 
           messageBubbles.add(messageBubble);
@@ -132,6 +126,7 @@ class MessageStream extends StatelessWidget {
 
         return Expanded(
           child: ListView(
+            reverse: true,
             padding: EdgeInsets.symmetric(
               horizontal: 10.0,
               vertical: 20.0,
