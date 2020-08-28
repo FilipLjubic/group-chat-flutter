@@ -130,13 +130,16 @@ class MessageStream extends StatelessWidget {
         }
 
         return Expanded(
-          child: ListView(
+          child: ListView.builder(
+            itemCount: messageBubbles.length,
             reverse: true,
             padding: EdgeInsets.symmetric(
               horizontal: 10.0,
               vertical: 20.0,
             ),
-            children: messageBubbles,
+            itemBuilder: (context, index) {
+              return messageBubbles[index];
+            },
           ),
         );
       },

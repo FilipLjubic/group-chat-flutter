@@ -7,7 +7,8 @@ class MessageBubble extends StatelessWidget {
   final bool isMe;
 
   MessageBubble({this.sender, this.text, this.isMe, timestamp})
-      : this.timestamp = DateTime.parse(timestamp);
+      : this.timestamp = DateTime.parse(timestamp),
+        super(key: Key(timestamp));
 
   @override
   Widget build(BuildContext context) {
