@@ -16,7 +16,6 @@ class _ChatScreenState extends State<ChatScreen> {
   final messageTextController = TextEditingController();
   final _auth = FirebaseAuth.instance;
   String messageText;
-
   @override
   void initState() {
     getCurrentUser();
@@ -76,6 +75,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       _store.collection('messages').add({
                         'text': messageText,
                         'sender': loggedInUser.email,
+                        'messageId': DateTime.now().toString(),
                       });
                       messageTextController.clear();
                     },
@@ -98,7 +98,10 @@ class MessageStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _store.collection('messages').snapshots(),
+      stream: _store
+          .collection('messages')
+          .orderBy('messageId', descending: true)
+          .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
@@ -106,12 +109,13 @@ class MessageStream extends StatelessWidget {
                 backgroundColor: Colors.lightBlueAccent),
           );
         }
-        final messages = snapshot.data.docs.reversed;
+        final messages = snapshot.data.docs;
         List<MessageBubble> messageBubbles = [];
         for (var message in messages) {
           final messageData = message.data();
-          final messageText = messageData['text'];
-          final messageSender = messageData['sender'];
+          final String messageText = messageData['text'];
+          final String messageSender = messageData['sender'];
+          final String messageTime = messageData['messageId'];
 
           final currentUser = loggedInUser.email;
 
@@ -119,6 +123,7 @@ class MessageStream extends StatelessWidget {
             text: messageText,
             sender: messageSender,
             isMe: currentUser == messageSender,
+            timestamp: messageTime,
           );
 
           messageBubbles.add(messageBubble);
