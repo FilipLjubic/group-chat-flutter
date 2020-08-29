@@ -3,7 +3,9 @@
 ## What the app is about
 
 It's a modern-ish messaging app where users can sign up and log in to chat.
+
 The app is a bit different than the one in the tutorial.
+
 Differences:
 - animations
 - added timestamps to message bubbles
